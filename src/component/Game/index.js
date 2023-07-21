@@ -11,6 +11,7 @@ class Game extends Component {
       'https://assets.ccbp.in/frontend/react-js/match-game/orange-img.png',
     score: 0,
     timerCount: 60,
+    tabSelectedId: 'FRUIT',
   }
 
   componentDidMount() {
@@ -43,7 +44,11 @@ class Game extends Component {
     const filteredList = imagesList.filter(
       eachItem => eachItem.category === tabId,
     )
-    this.setState({selectedList: filteredList, isSelected: false})
+    this.setState({
+      selectedList: filteredList,
+      isSelected: false,
+      tabSelectedId: filteredList[0].category,
+    })
   }
 
   thumbnailImageSelected = id => {
@@ -54,12 +59,15 @@ class Game extends Component {
       eachItem => eachItem.imageUrl === randomImage,
     )
 
-    if (matchedImage[0].id === id) {
-      this.setState(prevState => ({score: prevState.score + 1}))
-    }
     const randomNumber = Math.floor(Math.random() * imagesList.length)
     const images = imagesList[randomNumber].imageUrl
     this.setState({randomImage: images})
+
+    if (matchedImage[0].id === id) {
+      this.setState(prevState => ({score: prevState.score + 1}))
+    } else if (matchedImage[0].id !== id) {
+      this.setState({timerCount: 0})
+    }
   }
 
   onClickPlayAgain = () => {
@@ -75,7 +83,7 @@ class Game extends Component {
           alt="trophy"
           src="https://assets.ccbp.in/frontend/react-js/match-game-trophy.png "
         />
-        <h1 className="game-over-score">Your Score</h1>
+        <p className="game-over-score">YOUR SCORE</p>
         <p className="game-over-score">{score}</p>
         <button
           className="play-again-button"
@@ -95,7 +103,7 @@ class Game extends Component {
 
   startGame = () => {
     const {tabsList, fruitsList} = this.props
-    const {selectedList, isSelected, randomImage} = this.state
+    const {selectedList, isSelected, randomImage, tabSelectedId} = this.state
 
     const listDisplayed = isSelected ? fruitsList : selectedList
     return (
@@ -107,6 +115,7 @@ class Game extends Component {
               key={eachItem.tabId}
               tabsListItemDetails={eachItem}
               tabSelected={this.tabSelected}
+              tabColor={eachItem.tabId === tabSelectedId}
             />
           ))}
         </ul>
@@ -138,6 +147,8 @@ class Game extends Component {
             <p className="score-text">
               Score:<span className="timer-text">{score}</span>
             </p>
+          </div>
+          <div className="timer-container">
             <img
               className="timer-logo"
               alt="timer"
