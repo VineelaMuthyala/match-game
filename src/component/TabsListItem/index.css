@@ -1,0 +1,14 @@
+.white {
+  text-decoration: underline;
+  font-size: 20px;
+  color: white;
+  border: none;
+  background-color: transparent;
+}
+.yellow {
+  text-decoration: underline;
+  font-size: 20px;
+  color: #fec653;
+  border: none;
+  background-color: transparent;
+}
